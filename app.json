@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "Dépenses",
+    "slug": "spend-tracking-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "depenses",
+    "userInterfaceStyle": "automatic",
+    "icon": "./assets/icon.png",
+    "backgroundColor": "#F4EBD9",
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "backgroundColor": "#772247",
+          "dark": {
+            "backgroundColor": "#3D1426",
+            "image": "./assets/splash-icon.png"
+          }
+        }
+      ]
+    ],
+    "android": {
+      "package": "com.depenses.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#772247"
+      },
+      "allowBackup": false,
+      "blockedPermissions": [
+        "android.permission.INTERNET",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.VIBRATE"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.depenses.app",
+      "supportsTablet": true
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png",
+      "name": "Dépenses",
+      "shortName": "Dépenses",
+      "lang": "fr"
+    }
+  }
+}
