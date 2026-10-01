@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ṣakk",
     "slug": "spend-tracking-app",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "scheme": "sakk",
     "userInterfaceStyle": "automatic",
@@ -25,7 +25,7 @@
     ],
     "android": {
       "package": "com.sakk.app",
-      "versionCode": 1,
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#772247"

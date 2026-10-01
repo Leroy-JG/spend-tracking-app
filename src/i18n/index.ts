@@ -63,3 +63,16 @@ export function dayLabel(key: string, now = Date.now()): string {
   const sameYear = year === new Date(now).getFullYear();
   return `${weekday} ${day === 1 ? '1er' : day} ${monthName(month0)}${sameYear ? '' : ` ${year}`}`;
 }
+
+/** Horodatage → '12 mars 2026 · 14:05' (heure locale). */
+export function formatDateTime(timestamp: number): string {
+  const d = new Date(timestamp);
+  return `${formatDate(dayKey(timestamp))} · ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
+
+/** 512 → '512 o', 24 600 → '24,0 Ko', 3 500 000 → '3,3 Mo'. */
+export function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} o`;
+  const [value, unit] = bytes < 1024 * 1024 ? [bytes / 1024, 'Ko'] : [bytes / (1024 * 1024), 'Mo'];
+  return `${value.toFixed(1).replace('.', ',')} ${unit}`;
+}
