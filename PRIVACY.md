@@ -1,4 +1,4 @@
-# Confidentialité — Dépenses
+# Confidentialité — Ṣakk
 
 **Vos données n'existent que sur votre appareil.** L'application n'a ni compte, ni serveur, ni statistiques d'usage :
 elle n'envoie rien sur Internet. Vous êtes le seul à détenir vos dépenses.

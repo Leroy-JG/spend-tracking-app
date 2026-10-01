@@ -3,8 +3,8 @@
 Ce fichier est lu automatiquement par Claude Code à chaque session : le tenir à jour à chaque décision ou étape terminée.
 
 ## But
-Suivi de dépenses **simple**. Nom affiché : **« Dépenses »** (provisoire : l'utilisateur n'en a pas donné ; les deux autres apps ont un nom propre, Alam et Binkām — à changer dans `app.json`
-`name` / `web.name` / `web.shortName`, `src/i18n/fr.ts` `app.name`, `public/manifest.webmanifest`, `public/index.html`). Identifiant `com.depenses.app`, schéma `depenses`, slug `spend-tracking-app`.
+Suivi de dépenses **simple**. Nom affiché : **« Ṣakk »** (choisi par l'utilisateur le 2026-10-01 ; S avec un point dessous, U+1E62 — **présent dans Raleway**, vérifié dans la table `cmap` de la police). Pour le changer : `app.json`
+`name` / `web.name` / `web.shortName`, `src/i18n/fr.ts` `app.name`, `public/manifest.webmanifest`, `public/index.html` (`apple-mobile-web-app-title`) — `src/name.test.ts` vérifie qu'ils concordent. Identifiants **ASCII** : `com.sakk.app`, schéma `sakk`, fichier `Sakk.apk` (le nom du dépôt / slug reste `spend-tracking-app` : il sert de sous-chemin GitHub Pages). Avant le 2026-10-01 l'app s'appelait « Dépenses » (`com.depenses.app`) : un APK installé sous cet ancien identifiant est **une autre app** pour Android (données séparées, à désinstaller).
 Solo, hors ligne, sans compte, Android + iPhone (+ PWA). Application « sœur » d'Alam (`leroy-jg/multi-level-progress-app`) et de Binkām (`leroy-jg/set-timer-app`) : même famille de marque, même pile technique.
 
 ## Demande initiale (utilisateur, 2026-10-01)
@@ -43,8 +43,8 @@ Solo, hors ligne, sans compte, Android + iPhone (+ PWA). Application « sœur »
 
 ## Distribution
 - PWA sur GitHub Pages : `.github/workflows/pages.yml` (sur push `main`) — **déjà actif** (premier déploiement réussi). `404.html` = `index.html` (repli SPA).
-- APK Android : `.github/workflows/android-apk.yml` (à la main, tag `v*`, ou **pull request vers `main`** — ajouté car le lancement manuel (`workflow_dispatch`) est impossible tant que le workflow n'est pas sur `main` : 404 ; build ≈ 25 min à chaque push de PR, retirer ce déclencheur si c'est trop lourd) → artefact `Depenses-apk` (`Depenses.apk`). Contrôles : manifeste (INTERNET retiré, `allowBackup=false`) puis APK final (`aapt2`,
-  **liste blanche** : seule `com.depenses.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`). Signé avec la clé de debug publique du modèle Expo sauf si les 4 secrets `ANDROID_*` existent (`scripts/sign-release.py`).
+- APK Android : `.github/workflows/android-apk.yml` (à la main, tag `v*`, ou **pull request vers `main`** — ajouté car le lancement manuel (`workflow_dispatch`) est impossible tant que le workflow n'est pas sur `main` : 404 ; build ≈ 25 min à chaque push de PR, retirer ce déclencheur si c'est trop lourd) → artefact `Sakk-apk` (`Sakk.apk`). Contrôles : manifeste (INTERNET retiré, `allowBackup=false`) puis APK final (`aapt2`,
+  **liste blanche** : seule `com.sakk.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`). Signé avec la clé de debug publique du modèle Expo sauf si les 4 secrets `ANDROID_*` existent (`scripts/sign-release.py`).
   Livrer : incrémenter `version` ET `android.versionCode`.
 
 ## Avancement
@@ -54,7 +54,7 @@ Solo, hors ligne, sans compte, Android + iPhone (+ PWA). Application « sœur »
 - [x] PWA testée sous le sous-chemin GitHub Pages (`EXPO_BASE_URL=/spend-tracking-app`) et **hors ligne** (service worker, données retrouvées)
 - [x] Manifeste généré par `expo prebuild` vérifié : aucune permission déclarée (INTERNET, stockage externe, fenêtres flottantes, vibreur retirés), `allowBackup=false`
 - [ ] **Jamais exécuté sur téléphone** : AsyncStorage natif, clavier numérique (`decimal-pad`, virgule selon la langue du clavier), feuilles + clavier Android, partage de l'export (`Share`)
-- [x] **APK Android construit sur le vrai CI** (PR #1, run 36867328423, 2026-10-01, ≈ 25 min, succès) : contrôle `aapt2` passé — **la seule permission déclarée est `com.depenses.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`** (pas d'`INTERNET`), `allowBackup` désactivé, signé avec la clé de debug publique ; artefact `Depenses-apk` (`Depenses.apk`, ≈ 49 Mo, durée de conservation par défaut de GitHub). La liste blanche n'a pas eu besoin d'être ajustée.
+- [x] **APK Android construit sur le vrai CI** (PR #1, run 36867328423, 2026-10-01, ≈ 25 min, succès) : contrôle `aapt2` passé — **la seule permission déclarée était `com.depenses.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`** (ancien nom ; désormais `com.sakk.app…`) (pas d'`INTERNET`), `allowBackup` désactivé, signé avec la clé de debug publique ; artefact `Depenses-apk` (`Depenses.apk` à l'époque, ≈ 49 Mo, durée de conservation par défaut de GitHub). La liste blanche n'a pas eu besoin d'être ajustée.
 - [x] **Site (PWA) déployé sur GitHub Pages** par la fusion de la PR #1 (run 36871587642 : typecheck, tests, export web, contrôle CSP `connect-src 'none'`, déploiement : tout au vert). Adresse attendue : `https://leroy-jg.github.io/spend-tracking-app/` — **non ouverte depuis la session** (le proxy du cloud bloque `github.io`) : à tester sur téléphone (Chrome / Safari → « Ajouter à l'écran d'accueil »).
 - [ ] Idées (non faites) : ventilation par mois sur la période, moyenne par jour, recherche dans les notes, dépenses récurrentes, devise au choix, thème forcé clair / sombre, sauvegardes automatiques (comme Alam), rappel d'export, stockage persistant web (`navigator.storage.persist()`, comme Alam)
 
