@@ -1,4 +1,4 @@
-# Mises à jour de sécurité automatiques (une PR par groupe), pour les dépendances et les actions GitHub.
+# Mises à jour automatiques (une PR par groupe), pour les dépendances et les actions GitHub.
 version: 2
 updates:
   - package-ecosystem: npm
@@ -8,11 +8,24 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
-    # Expo fixe les versions de ses modules natifs : ne pas les monter à la main.
     ignore:
-      - dependency-name: expo*
-        update-types: [version-update:semver-major]
-      - dependency-name: react-native*
+      # Expo fixe les versions de ses modules natifs (node_modules/expo/bundledNativeModules.json) : une version hors
+      # de cette liste n'est pas celle testée par Expo (le build APK échoue, ou pire, des données se perdent). Ces paquets
+      # ne se montent donc QU'AVEC une montée de version d'Expo (npm install expo@latest puis les versions de la liste),
+      # jamais seuls : aucune version n'est proposée par Dependabot, y compris mineure (react-native 0.86 → 0.87 en est une).
+      - dependency-name: expo
+      - dependency-name: expo-*
+      - dependency-name: react
+      - dependency-name: react-dom
+      - dependency-name: react-native
+      - dependency-name: react-native-*
+      - dependency-name: "@react-native-async-storage/async-storage"
+      - dependency-name: "@expo/vector-icons"
+      - dependency-name: "@expo/metro-runtime"
+      # Les types de React suivent la version de React ; TypeScript 7 n'est pas pris en charge par la chaîne Expo.
+      - dependency-name: "@types/react"
+        update-types: [version-update:semver-major, version-update:semver-minor]
+      - dependency-name: typescript
         update-types: [version-update:semver-major]
   - package-ecosystem: github-actions
     directory: /
