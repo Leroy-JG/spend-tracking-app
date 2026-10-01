@@ -10,6 +10,10 @@ Troisième application de la famille d'Alam (`multi-level-progress-app`) et de B
 - **Vos données n'existent que sur votre appareil** : pas de compte, pas de serveur, aucune connexion sortante (permission Internet retirée de l'APK, politique `connect-src 'none'` pour la PWA). Voir [PRIVACY.md](PRIVACY.md).
 - **Sauvegardes** : tout passe par des fichiers JSON. Sauvegardes automatiques facultatives (tous les N jours ou semaines, 5 à 50 conservées), chacune gardée dans le dossier de l'application avec un **historique** (restaurer, exporter, supprimer) ; export vers un endroit de votre choix et import depuis un fichier dans les Réglages.
 
+## Télécharger
+- **Android** : dernier `Sakk.apk` sur la page [Releases](../../releases/latest) du dépôt (ouvrir le fichier sur le téléphone, autoriser l'installation depuis cette source).
+- **Web / iPhone** : https://leroy-jg.github.io/spend-tracking-app/ (ouvrir dans Chrome ou Safari, « Ajouter à l'écran d'accueil »).
+
 ## Lancer
 ```bash
 npm install
