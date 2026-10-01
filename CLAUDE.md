@@ -43,7 +43,7 @@ Solo, hors ligne, sans compte, Android + iPhone (+ PWA). Application « sœur »
 
 ## Distribution
 - PWA sur GitHub Pages : `.github/workflows/pages.yml` (sur push `main`) — **à activer** : Réglages → Pages → Source : GitHub Actions. `404.html` = `index.html` (repli SPA).
-- APK Android : `.github/workflows/android-apk.yml` (à la main ou tag `v*`) → artefact `Depenses-apk` (`Depenses.apk`). Contrôles : manifeste (INTERNET retiré, `allowBackup=false`) puis APK final (`aapt2`,
+- APK Android : `.github/workflows/android-apk.yml` (à la main, tag `v*`, ou **pull request vers `main`** — ajouté car le lancement manuel (`workflow_dispatch`) est impossible tant que le workflow n'est pas sur `main` : 404 ; build ≈ 25 min à chaque push de PR, retirer ce déclencheur si c'est trop lourd) → artefact `Depenses-apk` (`Depenses.apk`). Contrôles : manifeste (INTERNET retiré, `allowBackup=false`) puis APK final (`aapt2`,
   **liste blanche** : seule `com.depenses.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`). Signé avec la clé de debug publique du modèle Expo sauf si les 4 secrets `ANDROID_*` existent (`scripts/sign-release.py`).
   Livrer : incrémenter `version` ET `android.versionCode`.
 

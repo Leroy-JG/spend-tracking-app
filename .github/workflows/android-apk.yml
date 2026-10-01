@@ -1,6 +1,8 @@
 # Construit un APK Android installable directement (sans Google Play, sans compte Expo).
 # Lancer à la main (Actions → « APK Android » → Run workflow) ou en poussant un tag « v* » (ex. v1.0.0) :
 # l'APK est alors joint à la release GitHub correspondante.
+# Se lance aussi sur chaque pull request vers main : le lancement manuel exige que le workflow existe déjà sur main,
+# donc la PR qui l'introduit (ou le modifie) ne pourrait pas le tester autrement. Le build dure ≈ 25 min.
 # Signature : clé personnelle si les secrets ANDROID_* existent (voir « Signature avec la clé personnelle »),
 # sinon clé de debug publique du modèle Expo (suffisant pour s'installer soi-même, à ne pas diffuser).
 name: APK Android
@@ -9,6 +11,8 @@ on:
   workflow_dispatch:
   push:
     tags: ['v*']
+  pull_request:
+    branches: [main]
 
 # Droits minimaux : lecture seule pour construire ; l'écriture (release) n'est donnée qu'au job qui publie.
 permissions:
