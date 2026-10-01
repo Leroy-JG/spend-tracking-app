@@ -1,27 +1,26 @@
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { Pressable, View } from 'react-native';
-import { ImportError, exportData, parseImport } from '../domain/exchange';
-import { dayKey } from '../domain/dates';
-import type { Data, Tag } from '../domain/types';
+import { exportData } from '../domain/exchange';
+import { exportFileName } from '../domain/backupFile';
+import type { Tag } from '../domain/types';
 import { t, tn } from '../i18n';
 import { useStore } from '../store/store';
-import { Button, Card, ConfirmSheet, Field, Sheet, Text } from './components';
-import { canPickFile, pickTextFile, shareText } from './files';
-import { KeyboardScrollView } from './keyboard';
+import { Button, Card, ConfirmSheet, Text } from './components';
+import { shareText } from './files';
+import { ImportButton } from './ImportButton';
+import { periodLabel } from './BackupsView';
 import { TabScreen } from './Screen';
 import { TagSheet } from './TagSheet';
 import { useTheme } from './theme';
 
 export function SettingsView() {
   const theme = useTheme();
+  const router = useRouter();
   const store = useStore();
   const [tagSheet, setTagSheet] = useState<{ tag: Tag | null } | null>(null);
-  const [importOpen, setImportOpen] = useState(false);
-  const [text, setText] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState<Data | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [eraseOpen, setEraseOpen] = useState(false);
 
@@ -31,25 +30,11 @@ export function SettingsView() {
   const doExport = async () => {
     const at = Date.now();
     try {
-      const shared = await shareText(`sakk-sauvegarde-${dayKey(at)}.json`, exportData(store.data, at));
+      const shared = await shareText(exportFileName(at), exportData(store.data, at));
       if (shared) setMessage(t('settings.exported'));
     } catch {
       setMessage(t('settings.exportFailed'));
     }
-  };
-
-  const tryParse = (source: string) => {
-    try {
-      setPending(parseImport(source));
-      setError(null);
-    } catch (e) {
-      setError(e instanceof ImportError ? t(`import.${e.message}` as 'import.invalid_json') : t('import.invalid_format'));
-    }
-  };
-
-  const pickFile = async () => {
-    const content = await pickTextFile();
-    if (content !== null) tryParse(content);
   };
 
   return (
@@ -87,19 +72,30 @@ export function SettingsView() {
         <Text style={{ fontWeight: '800', fontSize: 15, marginBottom: 8 }}>{t('privacy.headline')}</Text>
         <Text style={{ color: theme.muted, lineHeight: 20 }}>{t('privacy.text')}</Text>
       </Card>
+      <Pressable
+        onPress={() => router.push('/backups')}
+        accessibilityRole="button"
+        accessibilityLabel={t('settings.backups')}
+        style={{ marginTop: 12 }}
+      >
+        <Card style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 14 }}>
+          <Ionicons name="save-outline" size={22} color={theme.action} style={{ marginRight: 12 }} />
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontWeight: '700', fontSize: 15 }}>{t('settings.backups')}</Text>
+            <Text style={{ color: theme.muted, fontSize: 12, marginTop: 2 }}>
+              {store.settings.autoBackup.enabled
+                ? t('settings.backupsSummary', { period: periodLabel(store.settings.autoBackup), count: tn('autobackup.count', store.backups.length) })
+                : `${t('settings.backupsOff')} · ${tn('autobackup.count', store.backups.length)}`}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.muted} />
+        </Card>
+      </Pressable>
       <Card style={{ marginTop: 12 }}>
         <Text style={{ color: theme.muted, lineHeight: 20, marginBottom: 14 }}>{t('settings.dataHelp')}</Text>
         <View style={{ gap: 10 }}>
           <Button title={t('settings.export')} onPress={doExport} />
-          <Button
-            title={t('settings.import')}
-            variant="ghost"
-            onPress={() => {
-              setText('');
-              setError(null);
-              setImportOpen(true);
-            }}
-          />
+          <ImportButton title={t('settings.import')} />
         </View>
         {message ? (
           <Text style={{ color: theme.success, marginTop: 12 }} accessibilityLiveRegion="polite">
@@ -117,49 +113,6 @@ export function SettingsView() {
       </Text>
 
       <TagSheet visible={tagSheet !== null} tag={tagSheet?.tag ?? null} onClose={() => setTagSheet(null)} />
-
-      <Sheet visible={importOpen && !pending} title={t('settings.import')} onClose={() => setImportOpen(false)}>
-        <KeyboardScrollView style={{ flexGrow: 0 }}>
-          {canPickFile ? <Button title={t('settings.pickFile')} variant="ghost" onPress={pickFile} style={{ marginBottom: 14 }} /> : null}
-          <Field
-            label={t('settings.pasteLabel')}
-            value={text}
-            onChangeText={(v) => {
-              setText(v);
-              setError(null);
-            }}
-            multiline
-            style={{ minHeight: 120, textAlignVertical: 'top' }}
-            placeholder="{ ... }"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-          {error ? (
-            <Text style={{ color: theme.error, marginBottom: 10 }} accessibilityLiveRegion="polite">
-              {error}
-            </Text>
-          ) : null}
-          <Button title={t('settings.importCheck')} disabled={text.trim() === ''} onPress={() => tryParse(text)} />
-        </KeyboardScrollView>
-      </Sheet>
-
-      <ConfirmSheet
-        visible={!!pending}
-        title={t('settings.importConfirmTitle')}
-        message={t('settings.importConfirmText', {
-          tags: tn('count.tag', pending?.tags.length ?? 0),
-          entries: tn('count.entry', pending?.entries.length ?? 0),
-        })}
-        confirmLabel={t('settings.importConfirm')}
-        danger
-        onClose={() => setPending(null)}
-        onConfirm={() => {
-          if (pending) store.replaceAll(pending);
-          setPending(null);
-          setImportOpen(false);
-          setMessage(t('settings.imported'));
-        }}
-      />
 
       <ConfirmSheet
         visible={eraseOpen}

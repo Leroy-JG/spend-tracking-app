@@ -21,9 +21,10 @@ export interface ExportFile extends Data {
   exportedAt: number;
 }
 
-export function exportData(data: Data, now: number): string {
+/** `compact` : sans retraits (copies automatiques : plus légères). */
+export function exportData(data: Data, now: number, compact = false): string {
   const file: ExportFile = { app: EXPORT_APP, version: EXPORT_VERSION, exportedAt: now, tags: data.tags, entries: data.entries };
-  return JSON.stringify(file, null, 2);
+  return compact ? JSON.stringify(file) : JSON.stringify(file, null, 2);
 }
 
 export class ImportError extends Error {}

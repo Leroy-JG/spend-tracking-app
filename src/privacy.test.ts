@@ -32,6 +32,7 @@ describe('code de l’application : aucun accès réseau', () => {
     ['sendBeacon', /sendBeacon/],
     ['ouverture de lien (Linking.openURL)', /openURL/],
     ['adresse http(s)', /https?:\/\//],
+    ['téléchargement / envoi de fichier (expo-file-system)', /downloadFileAsync|createDownloadTask|createUploadTask|\.upload\s*\(/],
     ['import d’un client réseau', /from\s+['"](axios|ky|got|node-fetch|cross-fetch|socket\.io-client)['"]/],
   ];
 
