@@ -42,19 +42,20 @@ Solo, hors ligne, sans compte, Android + iPhone (+ PWA). Application « sœur »
 - Web : `public/` (manifest, `sw.js` hors ligne, `register-sw.js`, icônes), CSP `connect-src 'none'` dans `public/index.html`.
 
 ## Distribution
-- PWA sur GitHub Pages : `.github/workflows/pages.yml` (sur push `main`) — **à activer** : Réglages → Pages → Source : GitHub Actions. `404.html` = `index.html` (repli SPA).
+- PWA sur GitHub Pages : `.github/workflows/pages.yml` (sur push `main`) — **déjà actif** (premier déploiement réussi). `404.html` = `index.html` (repli SPA).
 - APK Android : `.github/workflows/android-apk.yml` (à la main, tag `v*`, ou **pull request vers `main`** — ajouté car le lancement manuel (`workflow_dispatch`) est impossible tant que le workflow n'est pas sur `main` : 404 ; build ≈ 25 min à chaque push de PR, retirer ce déclencheur si c'est trop lourd) → artefact `Depenses-apk` (`Depenses.apk`). Contrôles : manifeste (INTERNET retiré, `allowBackup=false`) puis APK final (`aapt2`,
   **liste blanche** : seule `com.depenses.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`). Signé avec la clé de debug publique du modèle Expo sauf si les 4 secrets `ANDROID_*` existent (`scripts/sign-release.py`).
   Livrer : incrémenter `version` ET `android.versionCode`.
 
 ## Avancement
-- [x] Projet créé (Expo 57, TypeScript strict, expo-router, Vitest), palette grenat validée, icône, PWA, workflows, docs
+- [x] Projet créé (Expo 57, TypeScript strict, expo-router, Vitest), palette grenat validée, icône, PWA, workflows, docs — **fusionné dans `main` (PR #1)**
 - [x] Domaine + tests (57 tests : montants, dates, tags, dépenses, suivi, import / export, palette, confidentialité, libellés de dates)
 - [x] Testé dans Chromium (40 vérifications, viewport téléphone) : création de tags (doublon refusé), saisie du montant (virgule / point / lettres), ajout, date « hier » via le sélecteur, modification, suppression, persistance au rechargement, 120 dépenses (30 puis chargement au scroll jusqu'à 120), calendrier, suivi (mois / année / 2 tags / dates / tout), renommer / supprimer un tag, export, import (invalide refusé / valide), effacement total, thème sombre, **aucune requête externe, aucune erreur console**
 - [x] PWA testée sous le sous-chemin GitHub Pages (`EXPO_BASE_URL=/spend-tracking-app`) et **hors ligne** (service worker, données retrouvées)
 - [x] Manifeste généré par `expo prebuild` vérifié : aucune permission déclarée (INTERNET, stockage externe, fenêtres flottantes, vibreur retirés), `allowBackup=false`
 - [ ] **Jamais exécuté sur téléphone** : AsyncStorage natif, clavier numérique (`decimal-pad`, virgule selon la langue du clavier), feuilles + clavier Android, partage de l'export (`Share`)
-- [ ] **Workflows jamais exécutés** (APK : build ≈ 25 min ; la liste blanche de permissions est celle du manifeste généré, à confirmer sur le vrai CI) → lancer « APK Android » sur la branche avant de fusionner
+- [x] **APK Android construit sur le vrai CI** (PR #1, run 36867328423, 2026-10-01, ≈ 25 min, succès) : contrôle `aapt2` passé — **la seule permission déclarée est `com.depenses.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`** (pas d'`INTERNET`), `allowBackup` désactivé, signé avec la clé de debug publique ; artefact `Depenses-apk` (`Depenses.apk`, ≈ 49 Mo, durée de conservation par défaut de GitHub). La liste blanche n'a pas eu besoin d'être ajustée.
+- [x] **Site (PWA) déployé sur GitHub Pages** par la fusion de la PR #1 (run 36871587642 : typecheck, tests, export web, contrôle CSP `connect-src 'none'`, déploiement : tout au vert). Adresse attendue : `https://leroy-jg.github.io/spend-tracking-app/` — **non ouverte depuis la session** (le proxy du cloud bloque `github.io`) : à tester sur téléphone (Chrome / Safari → « Ajouter à l'écran d'accueil »).
 - [ ] Idées (non faites) : ventilation par mois sur la période, moyenne par jour, recherche dans les notes, dépenses récurrentes, devise au choix, thème forcé clair / sombre, sauvegardes automatiques (comme Alam), rappel d'export, stockage persistant web (`navigator.storage.persist()`, comme Alam)
 
 ## Notes techniques
