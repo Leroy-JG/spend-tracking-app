@@ -1,5 +1,5 @@
 export const fr = {
-  'app.name': 'Dépenses',
+  'app.name': 'Ṣakk',
 
   'common.cancel': 'Annuler',
   'common.close': 'Fermer',

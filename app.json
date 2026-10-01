@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Dépenses",
+    "name": "Ṣakk",
     "slug": "spend-tracking-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "depenses",
+    "scheme": "sakk",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
     "backgroundColor": "#F4EBD9",
@@ -24,7 +24,7 @@
       ]
     ],
     "android": {
-      "package": "com.depenses.app",
+      "package": "com.sakk.app",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -40,15 +40,15 @@
       ]
     },
     "ios": {
-      "bundleIdentifier": "com.depenses.app",
+      "bundleIdentifier": "com.sakk.app",
       "supportsTablet": true
     },
     "web": {
       "bundler": "metro",
       "output": "single",
       "favicon": "./assets/favicon.png",
-      "name": "Dépenses",
-      "shortName": "Dépenses",
+      "name": "Ṣakk",
+      "shortName": "Ṣakk",
       "lang": "fr"
     }
   }

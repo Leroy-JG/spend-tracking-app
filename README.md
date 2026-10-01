@@ -1,5 +1,5 @@
 # spend-tracking-app
-Application mobile (et web installable) de **suivi de dépenses**, simple et hors ligne. Nom affiché : « Dépenses ».
+Application mobile (et web installable) de **suivi de dépenses**, simple et hors ligne. Nom affiché : **« Ṣakk »**.
 Troisième application de la famille d'Alam (`multi-level-progress-app`) et de Binkām (`set-timer-app`) : même charte, même pile technique, fond de marque grenat.
 
 - **Ajouter une dépense** : choisir un tag, saisir le montant, une note facultative, la date (aujourd'hui par défaut).

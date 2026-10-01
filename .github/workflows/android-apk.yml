@@ -81,40 +81,40 @@ jobs:
         working-directory: android
         run: ./gradlew assembleRelease --no-daemon
       - name: Renommer l'APK
-        run: cp android/app/build/outputs/apk/release/app-release.apk Depenses.apk
+        run: cp android/app/build/outputs/apk/release/app-release.apk Sakk.apk
       # Contrôle sur l'APK final (après fusion avec les manifestes de toutes les bibliothèques).
       - name: Vérifier l'APK (confidentialité)
         run: |
           set -eu
           AAPT2=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -1)
-          "$AAPT2" dump permissions Depenses.apk
-          if "$AAPT2" dump permissions Depenses.apk | grep -q 'android.permission.INTERNET'; then
+          "$AAPT2" dump permissions Sakk.apk
+          if "$AAPT2" dump permissions Sakk.apk | grep -q 'android.permission.INTERNET'; then
             echo "::error::L'APK déclare la permission INTERNET : il pourrait envoyer des données sur Internet."
             exit 1
           fi
           # Liste blanche : toute permission qui n'est pas ici fait échouer le build (une dépendance qui en ajouterait une
           # doit être un choix explicite : la bloquer dans app.json > android.blockedPermissions, ou l'autoriser ici ET dans PRIVACY.md).
-          ALLOWED=" com.depenses.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION "
+          ALLOWED=" com.sakk.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION "
           BAD=0
-          for p in $("$AAPT2" dump permissions Depenses.apk | sed -n "s/^uses-permission[^:]*: name='\([^']*\)'.*/\1/p"); do
+          for p in $("$AAPT2" dump permissions Sakk.apk | sed -n "s/^uses-permission[^:]*: name='\([^']*\)'.*/\1/p"); do
             case "$ALLOWED" in
               *" $p "*) ;;
               *) echo "::error::Permission inattendue dans l'APK : $p"; BAD=1 ;;
             esac
           done
           [ "$BAD" = 0 ] || exit 1
-          if ! "$AAPT2" dump xmltree --file AndroidManifest.xml Depenses.apk | grep allowBackup | grep -Eq '=(false|\(type 0x12\)0x0)'; then
+          if ! "$AAPT2" dump xmltree --file AndroidManifest.xml Sakk.apk | grep allowBackup | grep -Eq '=(false|\(type 0x12\)0x0)'; then
             echo "::error::La sauvegarde automatique Android (allowBackup) n'est pas désactivée dans l'APK."
             exit 1
           fi
       - name: Empreinte de la signature
         run: |
           APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | tail -1)
-          "$APKSIGNER" verify --print-certs Depenses.apk | grep -E "certificate (DN|SHA-256)"
+          "$APKSIGNER" verify --print-certs Sakk.apk | grep -E "certificate (DN|SHA-256)"
       - uses: actions/upload-artifact@v4
         with:
-          name: Depenses-apk
-          path: Depenses.apk
+          name: Sakk-apk
+          path: Sakk.apk
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -125,7 +125,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: Depenses-apk
+          name: Sakk-apk
       - uses: softprops/action-gh-release@v2
         with:
-          files: Depenses.apk
+          files: Sakk.apk

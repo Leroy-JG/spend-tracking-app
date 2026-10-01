@@ -31,7 +31,7 @@ export function SettingsView() {
   const doExport = async () => {
     const at = Date.now();
     try {
-      const shared = await shareText(`depenses-sauvegarde-${dayKey(at)}.json`, exportData(store.data, at));
+      const shared = await shareText(`sakk-sauvegarde-${dayKey(at)}.json`, exportData(store.data, at));
       if (shared) setMessage(t('settings.exported'));
     } catch {
       setMessage(t('settings.exportFailed'));
