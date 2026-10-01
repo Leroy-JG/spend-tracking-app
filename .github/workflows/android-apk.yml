@@ -20,6 +20,8 @@ on:
     tags: ['v*']
   pull_request:
     branches: [main]
+    # Une PR qui ne change que de la documentation n'a pas besoin d'un build de 25 min.
+    paths-ignore: ['**.md']
 
 # Droits minimaux : lecture seule pour construire ; l'écriture (release) n'est donnée qu'au job qui publie.
 permissions:
